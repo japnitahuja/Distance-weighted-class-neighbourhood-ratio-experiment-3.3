@@ -16,7 +16,7 @@ from math import cos
 
 #initialisation
 radius = 25
-centroidDistance = 240
+centroidDistance = 290
 stepsize = 10
 
 #imbalance

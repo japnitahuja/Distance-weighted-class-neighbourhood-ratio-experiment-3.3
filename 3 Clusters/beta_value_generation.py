@@ -9,6 +9,8 @@ Beta((Xi,yi)) = SNND((Xi,yi)) / ANND((Xi,yi))
 dont forget to exclude the point itself
 """
 
+from operator import itemgetter
+
 def distance(a,b): #euclidean
     squaredDistance = 0
     for i in range(len(a)):
@@ -16,19 +18,25 @@ def distance(a,b): #euclidean
     return squaredDistance ** 0.5
     
 
-def betaValue(features,labels):#features [[X1,X2,...,Xi]] n sized; labels [y] n sized
+def betaValue(features,labels,classDistribution):#features [[X1,X2,...,Xi]] n sized; labels [y] n sized
     betaAll = []
     for i in range(len(features)):
         SNND = 0
         ANND = 0
+        all_distances = []
         for j in range(len(features)):
             if i == j:
                 continue
             dist = distance(features[i],features[j])
-            if labels[i] == labels[j]:
-                SNND += (1/(1+dist))
+            all_distances.append([dist,labels[j]])
             ANND += (1/(1+dist))
-
+            
+        all_distances = sorted(all_distances, key=itemgetter(0))
+        k = classDistribution[labels[i]] - 1
+        for j in all_distances[:k]:
+            if j[1] == labels[i]:
+                SNND += (1/(1+j[0]))
+                
         betaEach = SNND/ANND
         betaAll.append(betaEach)
     return betaAll

@@ -1,14 +1,28 @@
 from sklearn.linear_model import LinearRegression
 
-scores = []
+betaAll = []
+betaBins = []
 
-file = open('silhouetteScores.txt','r')
+file = open('betaValues.txt','r')
 for i in file:
     i = i.strip("\n")
-    i = float(i)
-    if len(str(i)) > 0:
-        scores.append(i)
+    i = i.split(",")
+    temp = []
+    
+    if len(i) == 0:
+        break
+    
+    for j in i[:-1]:
+        temp.append(float(j))
+    betaAll.append(temp)
 file.close()
+
+for i in betaAll:
+    temp = [0 for x in range(10)]
+    for j in i:
+        #print(int(j*10))
+        temp[int(j*10)] += 1
+    betaBins.append(temp)
 
 
 
@@ -70,9 +84,9 @@ for i in file:
 temp = []
 temp_measure = []
 file = open('complexityRegModels.txt','w')
-y = scores
+x = betaBins
 for i in measures.keys():
-    x = measures[i] 
+    y = measures[i] 
     try:
         reg = LinearRegression().fit(x, y)
         regScore = reg.score(x,y)
